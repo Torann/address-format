@@ -31,8 +31,8 @@ $ composer require torann/address-format
 
 **Arguments:**
 
-`$data` - An array of address elements
-`$html` - When set to true the address elements will be wrapped with `span` tags.
+- `$data` - An array of address elements
+- `$html` - When set to true the address elements will be wrapped with `span` tags.
 
 > **NOTE:** The wrapping span tags contain itemprop attributes that adhere to the [PostalAddress](http://schema.org/PostalAddress) schema.
 
@@ -71,7 +71,7 @@ This allows you to set your own formats.
 
 **Arguments:**
 
-`$countries` - An array of country ISO codes and corresponding formats values.
+- `$countries` - An array of country ISO codes and corresponding formats values.
 
 **Usage:**
 
