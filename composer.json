@@ -1,0 +1,29 @@
+{
+  "name": "torann/address-format",
+  "type": "library",
+  "description": "A PHP library to parse street addresses to localized formats",
+  "keywords": ["street addresses", "localized formats", "address format"],
+  "license": "BSD 2-Clause",
+  "authors": [
+    {
+      "name": "Daniel Stainback",
+      "email": "torann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.9"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^4.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Torann\\AddressFormat\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
