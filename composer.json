@@ -3,7 +3,7 @@
   "type": "library",
   "description": "A PHP library to parse street addresses to localized formats",
   "keywords": ["street addresses", "localized formats", "address format"],
-  "license": "BSD 2-Clause",
+  "license": "BSD-2-Clause",
   "authors": [
     {
       "name": "Daniel Stainback",
