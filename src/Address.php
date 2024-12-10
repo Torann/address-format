@@ -6,10 +6,8 @@ class Address
 {
     /**
      * Country address formats.
-     *
-     * @var array
      */
-    protected static $countries;
+    protected static array|null $countries = null;
 
     /**
      * This map specifies the content on how to format the address
@@ -17,10 +15,8 @@ class Address
      *
      * https://code.google.com/p/libaddressinput/source/browse/trunk
      * /src/com/android/i18n/addressinput/AddressField.java?r=111
-     *
-     * @var array
      */
-    protected static $address_map = [
+    protected static array $address_map = [
         'S' => 'admin_area',        // state
         'C' => 'locality',          // city
         'N' => 'recipient',         // name
@@ -34,10 +30,8 @@ class Address
 
     /**
      * This map specifies the item to a `itemprop` attribute
-     *
-     * @var array
      */
-    protected static $itemprops = [
+    protected static array $itemprops = [
         'admin_area' => 'addressRegion',    // state
         'locality' => 'addressLocality',    // city
         'recipient' => 'name',              // name
@@ -51,10 +45,8 @@ class Address
 
     /**
      * The input map will hold all the information we put in to the class
-     *
-     * @var array
      */
-    protected static $structure = [
+    protected static array $structure = [
         'admin_area' => '',         // state
         'locality' => '',           // city
         'recipient' => '',          // name
@@ -77,7 +69,7 @@ class Address
      *
      * @return string
      */
-    public static function formatHtml(array $data)
+    public static function formatHtml(array $data): string
     {
         return self::format($data, true);
     }
@@ -91,7 +83,7 @@ class Address
      *
      * @return string
      */
-    public static function format(array $data, $html = false)
+    public static function format(array $data, bool $html = false): string
     {
         // Merge in defaults
         $data = array_merge(self::$structure, $data);
@@ -104,16 +96,24 @@ class Address
             $value = $data[$key];
 
             // Skip the second address
-            if ($key == 'street_address_2') continue;
+            if ($key == 'street_address_2') {
+                continue;
+            }
 
             // Append second street address
             if ($key == 'street_address') {
-                $value = $value . ($data['street_address_2'] ? ($html ? '<br>' : '%n') . $data['street_address_2'] : '');
+                $suffix = $data['street_address_2']
+                    ? ($html ? '<br>' : '%n') . $data['street_address_2']
+                    : '';
+
+                $value = "{$value}{$suffix}";
             }
 
             // Wrap with SPAN for HTML layouts
             if ($html === true && $value) {
-                $value = "<span" . self::getItemProp($key) . ">{$value}</span>";
+                $prop = self::getItemProp($key);
+
+                $value = "<span{$prop}>{$value}</span>";
             }
 
             $formatted_address = str_replace("%{$id}", $value, $formatted_address);
@@ -123,9 +123,7 @@ class Address
         $formatted_address = trim(str_replace('%n', "\n", $formatted_address));
 
         // Remove blank lines from the resulting address
-        $formatted_address = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $formatted_address);
-
-        return $formatted_address;
+        return preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $formatted_address);
     }
 
     /**
@@ -133,23 +131,19 @@ class Address
      *
      * @param string $country
      *
-     * @return mixed
+     * @return string
      */
-    public static function getFormat($country)
+    public static function getFormat(string $country): string
     {
         if (self::$countries === null) {
             self::setFormats(include(__DIR__ . '/countries.php'));
         }
 
-        // Ensure it's upper cased
+        // Ensure it's in upper case
         $country = strtoupper($country);
 
         // Return international format for missing
-        if (array_key_exists($country, self::$countries) === false) {
-            return '%N%n%O%n%A%n%C, %S %Z %R';
-        }
-
-        return self::$countries[$country];
+        return self::$countries[$country] ?? '%N%n%O%n%A%n%C, %S %Z %R';
     }
 
     /**
@@ -157,7 +151,7 @@ class Address
      *
      * @param array|null $countries
      */
-    public static function setFormats($countries)
+    public static function setFormats(array|null $countries): void
     {
         self::$countries = $countries;
     }
@@ -167,7 +161,7 @@ class Address
      *
      * @return array|null
      */
-    public static function getFormats()
+    public static function getFormats(): array|null
     {
         return self::$countries;
     }
@@ -179,7 +173,7 @@ class Address
      *
      * @return string
      */
-    protected static function getItemProp($key)
+    protected static function getItemProp(string $key): string
     {
         if ($prop = self::$itemprops[$key]) {
             return " itemprop=\"{$prop}\"";

@@ -2,7 +2,7 @@
 
 use Torann\AddressFormat\Address;
 
-class AddressTest extends \PHPUnit_Framework_TestCase
+class AddressTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @test
